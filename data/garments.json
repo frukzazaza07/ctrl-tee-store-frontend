@@ -1,0 +1,5 @@
+[
+  { "id": "crew", "basePrice": { "THB": 690, "USD": 22 } },
+  { "id": "vneck", "basePrice": { "THB": 690, "USD": 22 } },
+  { "id": "long-sleeve", "basePrice": { "THB": 890, "USD": 28 } }
+]

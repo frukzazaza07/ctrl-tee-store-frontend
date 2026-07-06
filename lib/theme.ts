@@ -21,7 +21,7 @@ export const motionTokens = {
 } as const;
 
 export const garmentColors = [
-  { id: "black", name: "Black", hex: "#0e1418" },
+  { id: "black", name: "Black", hex: "#08090b" },
   { id: "white", name: "White", hex: "#f5f6f7" },
   { id: "red", name: "Racing Red", hex: "#e4002b" },
   { id: "stone", name: "Stone", hex: "#a89f91" },

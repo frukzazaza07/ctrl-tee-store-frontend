@@ -8,6 +8,10 @@
   --color-border: #2a3339;
   --color-accent: #e4002b;
   --color-accent-fg: #ffffff;
+  /* Distinct studio backdrop for the configurator preview frame, so a
+     black garment (which is nearly the same hex as --color-bg) still
+     reads clearly against it. */
+  --color-preview-bg: #1c242b;
 }
 
 @theme inline {
@@ -18,6 +22,7 @@
   --color-border: var(--color-border);
   --color-accent: var(--color-accent);
   --color-accent-fg: var(--color-accent-fg);
+  --color-preview-bg: var(--color-preview-bg);
   --font-sans: var(--font-body);
 }
 
