@@ -8,15 +8,10 @@ import { cartSubtotal } from "@/features/cart/totals";
 import { formatPrice } from "@/lib/format";
 import { getProductById } from "@/lib/products";
 import { garmentColors } from "@/lib/theme";
+import { STYLE_LABEL_KEY } from "@/lib/labels";
 import { PlaceholderArt, type PlaceholderShape } from "@/components/ui/PlaceholderArt";
 import { buttonVariants } from "@/components/ui/Button";
 import type { CartItem } from "@/types/cart";
-
-const STYLE_LABEL_KEY = {
-  crew: "styleCrew",
-  vneck: "styleVneck",
-  "long-sleeve": "styleLongSleeve",
-} as const;
 
 const CATEGORY_SHAPE: Record<string, PlaceholderShape> = {
   tshirts: "tshirt",

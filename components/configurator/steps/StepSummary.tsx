@@ -10,33 +10,14 @@ import {
 import { calculatePrice } from "@/features/configurator/pricing";
 import { formatPrice } from "@/lib/format";
 import { garmentColors } from "@/lib/theme";
+import { COLOR_LABEL_KEY, STYLE_LABEL_KEY, FIT_LABEL_KEY } from "@/lib/labels";
 import { useCartStore } from "@/features/cart/store";
 import { buttonVariants } from "@/components/ui/Button";
 import { ShareLinkButton } from "@/components/configurator/ShareLinkButton";
+import { SizeSelector } from "@/components/product/SizeSelector";
 import { cn } from "@/lib/utils";
 
 const SIZES = ["S", "M", "L", "XL"];
-
-const COLOR_LABEL_KEY = {
-  black: "colorBlack",
-  white: "colorWhite",
-  red: "colorRed",
-  stone: "colorStone",
-  navy: "colorNavy",
-  olive: "colorOlive",
-} as const;
-
-const STYLE_LABEL_KEY = {
-  crew: "styleCrew",
-  vneck: "styleVneck",
-  "long-sleeve": "styleLongSleeve",
-} as const;
-
-const FIT_LABEL_KEY = {
-  slim: "fitSlim",
-  regular: "fitRegular",
-  oversized: "fitOversized",
-} as const;
 
 export function StepSummary() {
   const t = useTranslations("configurator");
@@ -102,20 +83,12 @@ export function StepSummary() {
         <dd>{textSides.length ? textSides.join(", ") : t("summaryNone")}</dd>
       </dl>
 
-      <label className="block max-w-[10rem]">
+      <div>
         <span className="text-sm text-fg-muted">{tCommon("size")}</span>
-        <select
-          value={size}
-          onChange={(e) => setSize(e.target.value)}
-          className="mt-2 w-full rounded-lg border border-border bg-bg px-3 py-2 text-fg focus:border-accent focus:outline-none"
-        >
-          {SIZES.map((s) => (
-            <option key={s} value={s}>
-              {s}
-            </option>
-          ))}
-        </select>
-      </label>
+        <div className="mt-2">
+          <SizeSelector sizes={SIZES} value={size} onChange={setSize} />
+        </div>
+      </div>
 
       <div className="flex items-center justify-between border-t border-border pt-5">
         <span className="text-sm text-fg-muted">{t("summaryTotal")}</span>

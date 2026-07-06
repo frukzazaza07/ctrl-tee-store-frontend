@@ -9,7 +9,10 @@
     "close": "ปิด",
     "learnMore": "เรียนรู้เพิ่มเติม",
     "loading": "กำลังโหลด…",
-    "size": "ไซซ์"
+    "size": "ไซซ์",
+    "color": "สี",
+    "quantity": "จำนวน",
+    "added": "เพิ่มแล้ว"
   },
   "nav": {
     "shop": "ร้านค้า",
@@ -75,6 +78,22 @@
       "name": "หมวกแก๊ป ทรงแข็ง",
       "description": "ทรงหน้าหมวกตั้ง สายปรับด้านหลัง"
     }
+  },
+  "shop": {
+    "title": "ร้านค้า",
+    "filterCategory": "หมวดหมู่",
+    "filterColor": "สี",
+    "filterSize": "ไซซ์",
+    "filterPrice": "ราคา",
+    "allCategories": "ทั้งหมด",
+    "upTo": "ไม่เกิน {price}",
+    "noResults": "ไม่พบสินค้าตามตัวกรองที่เลือก",
+    "clearFilters": "ล้างตัวกรอง"
+  },
+  "product": {
+    "addedToCart": "เพิ่มลงตะกร้าแล้ว",
+    "customizeInstead": "อยากออกแบบเสื้อของคุณเองไหม?",
+    "gallery": "แกลเลอรีสินค้า"
   },
   "configurator": {
     "chooseTitle": "เลือกเสื้อเริ่มต้น",

@@ -9,7 +9,10 @@
     "close": "Close",
     "learnMore": "Learn more",
     "loading": "Loading…",
-    "size": "Size"
+    "size": "Size",
+    "color": "Color",
+    "quantity": "Quantity",
+    "added": "Added"
   },
   "nav": {
     "shop": "Shop",
@@ -75,6 +78,22 @@
       "name": "Structured Cap",
       "description": "Stiff-front silhouette with an adjustable strap back."
     }
+  },
+  "shop": {
+    "title": "Shop",
+    "filterCategory": "Category",
+    "filterColor": "Color",
+    "filterSize": "Size",
+    "filterPrice": "Price",
+    "allCategories": "All",
+    "upTo": "Up to {price}",
+    "noResults": "No products match those filters.",
+    "clearFilters": "Clear filters"
+  },
+  "product": {
+    "addedToCart": "Added to cart",
+    "customizeInstead": "Want to design your own instead?",
+    "gallery": "Product gallery"
   },
   "configurator": {
     "chooseTitle": "Choose your base",

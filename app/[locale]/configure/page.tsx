@@ -3,12 +3,7 @@ import { Section } from "@/components/ui/Section";
 import { Link } from "@/i18n/navigation";
 import { PlaceholderArt } from "@/components/ui/PlaceholderArt";
 import { garments } from "@/lib/garments";
-
-const STYLE_LABEL_KEY = {
-  crew: "styleCrew",
-  vneck: "styleVneck",
-  "long-sleeve": "styleLongSleeve",
-} as const;
+import { STYLE_LABEL_KEY } from "@/lib/labels";
 
 export default async function ConfigureIndexPage({
   params,
