@@ -160,5 +160,31 @@
     "subtotal": "Subtotal",
     "checkout": "Checkout",
     "configuratorItem": "Custom {style}"
+  },
+  "checkout": {
+    "title": "Checkout",
+    "shippingTitle": "Shipping details",
+    "paymentTitle": "Payment",
+    "fullName": "Full name",
+    "email": "Email",
+    "address": "Address",
+    "city": "City",
+    "postalCode": "Postal code",
+    "country": "Country",
+    "cardNumber": "Card number",
+    "cardExpiry": "Expiry (MM/YY)",
+    "cardCvc": "CVC",
+    "placeOrder": "Place order",
+    "emptyCart": "Your cart is empty.",
+    "required": "This field is required.",
+    "invalidEmail": "Enter a valid email address.",
+    "invalidCard": "Enter a valid 16-digit card number.",
+    "invalidExpiry": "Enter a valid expiry date (MM/YY).",
+    "invalidCvc": "Enter a valid 3-digit CVC.",
+    "mockPaymentNote": "This is a demo store — no real payment is processed. Plug in Stripe/Omise here.",
+    "orderSummary": "Order summary",
+    "successTitle": "Order confirmed",
+    "successBody": "Thanks for your order! A confirmation has been sent to {email}.",
+    "orderNumber": "Order number"
   }
 }

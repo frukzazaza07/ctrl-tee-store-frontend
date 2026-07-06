@@ -7,6 +7,7 @@ import { IBM_Plex_Sans_Thai } from "next/font/google";
 import { routing } from "@/i18n/routing";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { CartDrawer } from "@/components/cart/CartDrawer";
 import "../globals.css";
 
 const bodyFont = IBM_Plex_Sans_Thai({
@@ -51,6 +52,7 @@ export default async function LocaleLayout({
           <Header />
           <main className="flex-1">{children}</main>
           <Footer />
+          <CartDrawer />
         </NextIntlClientProvider>
       </body>
     </html>

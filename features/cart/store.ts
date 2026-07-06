@@ -4,16 +4,21 @@ import type { CartItem } from "@/types/cart";
 
 interface CartState {
   items: CartItem[];
+  isDrawerOpen: boolean;
   addItem: (item: CartItem) => void;
   removeItem: (id: string) => void;
   setQuantity: (id: string, quantity: number) => void;
   clear: () => void;
+  openDrawer: () => void;
+  closeDrawer: () => void;
+  toggleDrawer: () => void;
 }
 
 export const useCartStore = create<CartState>()(
   persist(
     (set) => ({
       items: [],
+      isDrawerOpen: false,
 
       addItem: (item) =>
         set((state) => ({ items: [...state.items, item] })),
@@ -29,7 +34,14 @@ export const useCartStore = create<CartState>()(
         })),
 
       clear: () => set({ items: [] }),
+
+      openDrawer: () => set({ isDrawerOpen: true }),
+      closeDrawer: () => set({ isDrawerOpen: false }),
+      toggleDrawer: () => set((state) => ({ isDrawerOpen: !state.isDrawerOpen })),
     }),
-    { name: "ctrl-tee-cart" },
+    {
+      name: "ctrl-tee-cart",
+      partialize: (state) => ({ items: state.items }),
+    },
   ),
 );

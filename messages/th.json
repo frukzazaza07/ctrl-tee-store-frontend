@@ -160,5 +160,31 @@
     "subtotal": "ยอดรวม",
     "checkout": "ชำระเงิน",
     "configuratorItem": "{style} แบบกำหนดเอง"
+  },
+  "checkout": {
+    "title": "ชำระเงิน",
+    "shippingTitle": "ที่อยู่จัดส่ง",
+    "paymentTitle": "การชำระเงิน",
+    "fullName": "ชื่อ-นามสกุล",
+    "email": "อีเมล",
+    "address": "ที่อยู่",
+    "city": "เมือง/จังหวัด",
+    "postalCode": "รหัสไปรษณีย์",
+    "country": "ประเทศ",
+    "cardNumber": "หมายเลขบัตร",
+    "cardExpiry": "วันหมดอายุ (MM/YY)",
+    "cardCvc": "CVC",
+    "placeOrder": "ยืนยันคำสั่งซื้อ",
+    "emptyCart": "ตะกร้าของคุณว่างเปล่า",
+    "required": "กรุณากรอกข้อมูลนี้",
+    "invalidEmail": "กรุณากรอกอีเมลให้ถูกต้อง",
+    "invalidCard": "กรุณากรอกหมายเลขบัตร 16 หลักให้ถูกต้อง",
+    "invalidExpiry": "กรุณากรอกวันหมดอายุให้ถูกต้อง (MM/YY)",
+    "invalidCvc": "กรุณากรอก CVC 3 หลักให้ถูกต้อง",
+    "mockPaymentNote": "นี่คือร้านค้าทดลอง ไม่มีการชำระเงินจริงเกิดขึ้น (จุดเชื่อมต่อ Stripe/Omise อยู่ตรงนี้)",
+    "orderSummary": "สรุปคำสั่งซื้อ",
+    "successTitle": "ยืนยันคำสั่งซื้อแล้ว",
+    "successBody": "ขอบคุณสำหรับคำสั่งซื้อ! เราได้ส่งการยืนยันไปที่ {email}",
+    "orderNumber": "หมายเลขคำสั่งซื้อ"
   }
 }

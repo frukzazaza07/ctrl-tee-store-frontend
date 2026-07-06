@@ -2,6 +2,7 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { LocaleSwitcher } from "@/components/layout/LocaleSwitcher";
 import { MobileNav } from "@/components/layout/MobileNav";
+import { CartTriggerButton } from "@/components/layout/CartTriggerButton";
 
 export function Header() {
   const tCommon = useTranslations("common");
@@ -33,13 +34,7 @@ export function Header() {
 
         <div className="flex items-center gap-4">
           <LocaleSwitcher />
-          <Link
-            href="/cart"
-            aria-label={tNav("cart")}
-            className="text-sm text-fg-muted transition-colors hover:text-fg"
-          >
-            {tNav("cart")}
-          </Link>
+          <CartTriggerButton />
           <MobileNav links={links} />
         </div>
       </div>
