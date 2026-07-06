@@ -44,5 +44,35 @@
     "configuratorBannerCta": "Open the configurator",
     "storyTitle": "Built with intent",
     "storyBody": "Every piece starts as a blank canvas. We obsess over fabric weight, stitching, and fit so that whatever you design holds up — on you, not just on screen."
+  },
+  "products": {
+    "classic-crew": {
+      "name": "Classic Crew Tee",
+      "description": "Heavyweight cotton, a clean crew neck, and a fit that holds its shape."
+    },
+    "classic-vneck": {
+      "name": "Classic V-Neck Tee",
+      "description": "A softer neckline on the same heavyweight cotton base."
+    },
+    "essential-long-sleeve": {
+      "name": "Essential Long Sleeve",
+      "description": "Brushed interior, ribbed cuffs, built for layering."
+    },
+    "heavyweight-hoodie": {
+      "name": "Heavyweight Hoodie",
+      "description": "450gsm fleece with a lined hood and kangaroo pocket."
+    },
+    "zip-hoodie": {
+      "name": "Zip Hoodie",
+      "description": "Full-zip fleece with a relaxed, structured silhouette."
+    },
+    "performance-cap": {
+      "name": "Performance Cap",
+      "description": "Lightweight six-panel cap with a curved peak."
+    },
+    "structured-cap": {
+      "name": "Structured Cap",
+      "description": "Stiff-front silhouette with an adjustable strap back."
+    }
   }
 }

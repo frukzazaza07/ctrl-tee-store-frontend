@@ -1,0 +1,75 @@
+[
+  {
+    "id": "classic-crew",
+    "slug": "classic-crew",
+    "category": "tshirts",
+    "price": { "THB": 690, "USD": 22 },
+    "colors": ["black", "white", "navy", "stone"],
+    "sizes": ["S", "M", "L", "XL"],
+    "featured": true,
+    "configurable": true,
+    "garmentStyle": "crew"
+  },
+  {
+    "id": "classic-vneck",
+    "slug": "classic-vneck",
+    "category": "tshirts",
+    "price": { "THB": 690, "USD": 22 },
+    "colors": ["black", "white", "red"],
+    "sizes": ["S", "M", "L", "XL"],
+    "featured": false,
+    "configurable": true,
+    "garmentStyle": "vneck"
+  },
+  {
+    "id": "essential-long-sleeve",
+    "slug": "essential-long-sleeve",
+    "category": "tshirts",
+    "price": { "THB": 890, "USD": 28 },
+    "colors": ["black", "olive", "navy"],
+    "sizes": ["S", "M", "L", "XL"],
+    "featured": true,
+    "configurable": true,
+    "garmentStyle": "long-sleeve"
+  },
+  {
+    "id": "heavyweight-hoodie",
+    "slug": "heavyweight-hoodie",
+    "category": "hoodies",
+    "price": { "THB": 1590, "USD": 48 },
+    "colors": ["black", "stone", "navy"],
+    "sizes": ["S", "M", "L", "XL"],
+    "featured": true,
+    "configurable": false
+  },
+  {
+    "id": "zip-hoodie",
+    "slug": "zip-hoodie",
+    "category": "hoodies",
+    "price": { "THB": 1790, "USD": 54 },
+    "colors": ["black", "olive"],
+    "sizes": ["S", "M", "L", "XL"],
+    "featured": false,
+    "configurable": false
+  },
+  {
+    "id": "performance-cap",
+    "slug": "performance-cap",
+    "category": "caps",
+    "price": { "THB": 590, "USD": 18 },
+    "colors": ["black", "white", "red"],
+    "sizes": ["OS"],
+    "featured": true,
+    "configurable": false
+  },
+  {
+    "id": "structured-cap",
+    "slug": "structured-cap",
+    "category": "caps",
+    "price": { "THB": 650, "USD": 20 },
+    "colors": ["black", "stone"],
+    "sizes": ["OS"],
+    "featured": false,
+    "configurable": false
+  }
+]

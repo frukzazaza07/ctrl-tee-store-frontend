@@ -13,7 +13,7 @@ export const colors = {
   accentFg: "#ffffff",
 } as const;
 
-export const motion = {
+export const motionTokens = {
   fast: 0.2,
   base: 0.4,
   slow: 0.7,

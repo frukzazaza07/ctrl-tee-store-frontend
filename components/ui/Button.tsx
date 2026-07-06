@@ -1,16 +1,15 @@
 import { type ComponentPropsWithoutRef, forwardRef } from "react";
 import { cn } from "@/lib/utils";
 
-type ButtonVariant = "primary" | "secondary" | "ghost";
-type ButtonSize = "sm" | "md" | "lg";
+export type ButtonVariant = "primary" | "secondary" | "ghost";
+export type ButtonSize = "sm" | "md" | "lg";
 
 interface ButtonOwnProps {
   variant?: ButtonVariant;
   size?: ButtonSize;
 }
 
-export type ButtonProps = ButtonOwnProps &
-  ComponentPropsWithoutRef<"button">;
+export type ButtonProps = ButtonOwnProps & ComponentPropsWithoutRef<"button">;
 
 const variantClasses: Record<ButtonVariant, string> = {
   primary: "bg-accent text-accent-fg hover:brightness-110",
@@ -25,6 +24,20 @@ const sizeClasses: Record<ButtonSize, string> = {
   lg: "h-14 px-8 text-base",
 };
 
+/** Shared class generator so non-<button> elements (e.g. <Link>) can look like a Button. */
+export function buttonVariants({
+  variant = "primary",
+  size = "md",
+  className,
+}: ButtonOwnProps & { className?: string } = {}): string {
+  return cn(
+    "inline-flex items-center justify-center gap-2 rounded-full font-medium tracking-wide transition-all duration-200 disabled:opacity-40 disabled:pointer-events-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent",
+    variantClasses[variant],
+    sizeClasses[size],
+    className,
+  );
+}
+
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   function Button(
     { className, variant = "primary", size = "md", ...props },
@@ -33,12 +46,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <button
         ref={ref}
-        className={cn(
-          "inline-flex items-center justify-center gap-2 rounded-full font-medium tracking-wide transition-all duration-200 disabled:opacity-40 disabled:pointer-events-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent",
-          variantClasses[variant],
-          sizeClasses[size],
-          className,
-        )}
+        className={buttonVariants({ variant, size, className })}
         {...props}
       />
     );

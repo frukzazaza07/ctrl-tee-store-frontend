@@ -1,27 +1,26 @@
-import { useTranslations } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
-import { Section } from "@/components/ui/Section";
+import type { Locale } from "@/i18n/routing";
+import { Hero } from "@/components/home/Hero";
+import { CategoryTiles } from "@/components/home/CategoryTiles";
+import { FeaturedProducts } from "@/components/home/FeaturedProducts";
+import { ConfiguratorBanner } from "@/components/home/ConfiguratorBanner";
+import { BrandStory } from "@/components/home/BrandStory";
 
 export default async function HomePage({
   params,
 }: {
-  params: Promise<{ locale: string }>;
+  params: Promise<{ locale: Locale }>;
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
 
-  return <HomeContent />;
-}
-
-function HomeContent() {
-  const t = useTranslations("home");
-
   return (
-    <Section className="flex min-h-[70vh] flex-col items-center justify-center text-center">
-      <h1 className="text-5xl font-bold tracking-tight md:text-7xl">
-        {t("heroTitle")}
-      </h1>
-      <p className="mt-4 text-xl text-fg-muted">{t("heroSubtitle")}</p>
-    </Section>
+    <>
+      <Hero />
+      <CategoryTiles />
+      <FeaturedProducts locale={locale} />
+      <ConfiguratorBanner />
+      <BrandStory />
+    </>
   );
 }
