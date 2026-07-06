@@ -1,0 +1,48 @@
+{
+  "common": {
+    "brand": "CTRL TEE",
+    "fromPrice": "From {price}",
+    "customize": "Customize",
+    "shopNow": "Shop now",
+    "addToCart": "Add to cart",
+    "viewCart": "View cart",
+    "close": "Close",
+    "learnMore": "Learn more",
+    "loading": "Loading…"
+  },
+  "nav": {
+    "shop": "Shop",
+    "configurator": "Configurator",
+    "tshirts": "T-Shirts",
+    "hoodies": "Hoodies",
+    "caps": "Caps",
+    "cart": "Cart",
+    "menu": "Menu",
+    "language": "Language"
+  },
+  "footer": {
+    "tagline": "Engineered fit. Designed by you.",
+    "shop": "Shop",
+    "company": "Company",
+    "about": "About",
+    "contact": "Contact",
+    "help": "Help",
+    "shipping": "Shipping",
+    "returns": "Returns",
+    "faq": "FAQ",
+    "rights": "All rights reserved."
+  },
+  "home": {
+    "heroTitle": "Build your shirt.",
+    "heroSubtitle": "Not the other way around.",
+    "heroCta": "Start configuring",
+    "heroCtaSecondary": "Shop the collection",
+    "categoriesTitle": "Shop by category",
+    "featuredTitle": "Featured pieces",
+    "configuratorBannerTitle": "Design your own shirt",
+    "configuratorBannerBody": "Choose the fabric, the fit, the graphic, the words. Watch it come together in real time, then make it yours.",
+    "configuratorBannerCta": "Open the configurator",
+    "storyTitle": "Built with intent",
+    "storyBody": "Every piece starts as a blank canvas. We obsess over fabric weight, stitching, and fit so that whatever you design holds up — on you, not just on screen."
+  }
+}
