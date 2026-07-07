@@ -25,6 +25,10 @@ function ItemThumbnail({ item }: { item: CartItem }) {
       />
     );
   }
+  if (item.thumbnail) {
+    // eslint-disable-next-line @next/next/no-img-element -- flattened data URL, not a static asset
+    return <img src={item.thumbnail} alt="" className="h-full w-full object-cover" />;
+  }
   return <PlaceholderArt seed={item.id} shape="tshirt" />;
 }
 

@@ -8,6 +8,7 @@ import {
   configFromState,
 } from "@/features/configurator/store";
 import { calculatePrice } from "@/features/configurator/pricing";
+import { buildCartExport } from "@/features/configurator/export";
 import { formatPrice } from "@/lib/format";
 import { garmentColors } from "@/lib/theme";
 import { COLOR_LABEL_KEY, STYLE_LABEL_KEY, FIT_LABEL_KEY } from "@/lib/labels";
@@ -28,6 +29,7 @@ export function StepSummary() {
   const addItem = useCartStore((s) => s.addItem);
   const [size, setSize] = useState("M");
   const [added, setAdded] = useState(false);
+  const [adding, setAdding] = useState(false);
 
   const price = calculatePrice(config);
   const colorHex = garmentColors.find((c) => c.id === config.color)?.hex;
@@ -42,7 +44,9 @@ export function StepSummary() {
     config.back.text?.content ? `${t("viewBack")}: "${config.back.text.content}"` : null,
   ].filter((v): v is string => Boolean(v));
 
-  function handleAddToCart() {
+  async function handleAddToCart() {
+    setAdding(true);
+    const { thumbnail, printFiles } = await buildCartExport(config);
     addItem({
       id: crypto.randomUUID(),
       kind: "configurator",
@@ -51,7 +55,10 @@ export function StepSummary() {
       unitPrice: price,
       size,
       color: config.color,
+      thumbnail,
+      printFiles,
     });
+    setAdding(false);
     setAdded(true);
     setTimeout(() => setAdded(false), 2500);
   }
@@ -99,9 +106,10 @@ export function StepSummary() {
         <button
           type="button"
           onClick={handleAddToCart}
-          className={cn(buttonVariants({ size: "lg" }))}
+          disabled={adding}
+          className={cn(buttonVariants({ size: "lg" }), adding && "opacity-70")}
         >
-          {added ? t("summaryAdded") : tCommon("addToCart")}
+          {added ? t("summaryAdded") : adding ? t("summaryAdding") : tCommon("addToCart")}
         </button>
         <ShareLinkButton />
       </div>

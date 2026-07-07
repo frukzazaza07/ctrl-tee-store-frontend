@@ -7,6 +7,9 @@ import {
   useConfiguratorStore,
   defaultGraphicLayer,
 } from "@/features/configurator/store";
+import { getGarment } from "@/lib/garments";
+import { getPrintArea, printAreaOffsetBounds } from "@/features/configurator/printArea";
+import { validateDesignFile, readDesignFileAsDataUrl } from "@/features/configurator/upload";
 import { graphicsLibrary } from "@/lib/graphics-library";
 import { Slider } from "@/components/ui/Slider";
 import { buttonVariants } from "@/components/ui/Button";
@@ -17,6 +20,7 @@ export function StepGraphic() {
   const view = useConfiguratorStore((s) => s.view);
   const front = useConfiguratorStore((s) => s.front);
   const back = useConfiguratorStore((s) => s.back);
+  const garmentStyle = useConfiguratorStore((s) => s.garmentStyle);
   const setGraphic = useConfiguratorStore((s) => s.setGraphic);
   const updateGraphic = useConfiguratorStore((s) => s.updateGraphic);
 
@@ -25,17 +29,25 @@ export function StepGraphic() {
   const [tab, setTab] = useState<"upload" | "library">(
     graphic?.source ?? "library",
   );
+  const [error, setError] = useState<"type" | "size" | null>(null);
 
-  function handleFile(e: ChangeEvent<HTMLInputElement>) {
+  const garment = getGarment(garmentStyle);
+  const bounds = garment
+    ? printAreaOffsetBounds(getPrintArea(garment, view))
+    : { minX: -45, maxX: 45, minY: -45, maxY: 45 };
+
+  async function handleFile(e: ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
+    e.target.value = "";
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      if (typeof reader.result === "string") {
-        setGraphic(view, defaultGraphicLayer("upload", reader.result));
-      }
-    };
-    reader.readAsDataURL(file);
+    const result = validateDesignFile(file);
+    if (!result.ok) {
+      setError(result.reason);
+      return;
+    }
+    setError(null);
+    const dataUrl = await readDesignFileAsDataUrl(file);
+    setGraphic(view, defaultGraphicLayer("upload", dataUrl));
   }
 
   function handlePickLibrary(id: string) {
@@ -94,20 +106,27 @@ export function StepGraphic() {
           })}
         </div>
       ) : (
-        <label
-          className={cn(
-            buttonVariants({ variant: "secondary", size: "md" }),
-            "cursor-pointer",
+        <div className="space-y-2">
+          <label
+            className={cn(
+              buttonVariants({ variant: "secondary", size: "md" }),
+              "cursor-pointer",
+            )}
+          >
+            {t("graphicUploadCta")}
+            <input
+              type="file"
+              accept="image/png,image/jpeg"
+              onChange={handleFile}
+              className="sr-only"
+            />
+          </label>
+          {error && (
+            <p role="alert" className="text-sm text-accent">
+              {error === "type" ? t("graphicUploadErrorType") : t("graphicUploadErrorSize")}
+            </p>
           )}
-        >
-          {t("graphicUploadCta")}
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleFile}
-            className="sr-only"
-          />
-        </label>
+        </div>
       )}
 
       {graphic ? (
@@ -115,15 +134,15 @@ export function StepGraphic() {
           <Slider
             label={t("graphicPositionX")}
             value={graphic.x}
-            min={-45}
-            max={45}
+            min={bounds.minX}
+            max={bounds.maxX}
             onChange={(v) => updateGraphic(view, { x: v })}
           />
           <Slider
             label={t("graphicPositionY")}
             value={graphic.y}
-            min={-45}
-            max={45}
+            min={bounds.minY}
+            max={bounds.maxY}
             onChange={(v) => updateGraphic(view, { y: v })}
           />
           <Slider

@@ -1,5 +1,143 @@
 [
-  { "id": "crew", "basePrice": { "THB": 690, "USD": 22 } },
-  { "id": "vneck", "basePrice": { "THB": 690, "USD": 22 } },
-  { "id": "long-sleeve", "basePrice": { "THB": 890, "USD": 28 } }
+  {
+    "id": "crew",
+    "basePrice": {
+      "THB": 690,
+      "USD": 22
+    },
+    "images": {
+      "black": {
+        "front": "/garments/crew/black/front.png",
+        "back": "/garments/crew/black/back.png"
+      },
+      "white": {
+        "front": "/garments/crew/white/front.png",
+        "back": "/garments/crew/white/back.png"
+      },
+      "red": {
+        "front": "/garments/crew/red/front.png",
+        "back": "/garments/crew/red/back.png"
+      },
+      "stone": {
+        "front": "/garments/crew/stone/front.png",
+        "back": "/garments/crew/stone/back.png"
+      },
+      "navy": {
+        "front": "/garments/crew/navy/front.png",
+        "back": "/garments/crew/navy/back.png"
+      },
+      "olive": {
+        "front": "/garments/crew/olive/front.png",
+        "back": "/garments/crew/olive/back.png"
+      }
+    },
+    "printArea": {
+      "front": {
+        "x": 20,
+        "y": 20,
+        "width": 60,
+        "height": 50
+      },
+      "back": {
+        "x": 20,
+        "y": 15,
+        "width": 60,
+        "height": 55
+      }
+    }
+  },
+  {
+    "id": "vneck",
+    "basePrice": {
+      "THB": 690,
+      "USD": 22
+    },
+    "images": {
+      "black": {
+        "front": "/garments/vneck/black/front.png",
+        "back": "/garments/vneck/black/back.png"
+      },
+      "white": {
+        "front": "/garments/vneck/white/front.png",
+        "back": "/garments/vneck/white/back.png"
+      },
+      "red": {
+        "front": "/garments/vneck/red/front.png",
+        "back": "/garments/vneck/red/back.png"
+      },
+      "stone": {
+        "front": "/garments/vneck/stone/front.png",
+        "back": "/garments/vneck/stone/back.png"
+      },
+      "navy": {
+        "front": "/garments/vneck/navy/front.png",
+        "back": "/garments/vneck/navy/back.png"
+      },
+      "olive": {
+        "front": "/garments/vneck/olive/front.png",
+        "back": "/garments/vneck/olive/back.png"
+      }
+    },
+    "printArea": {
+      "front": {
+        "x": 20,
+        "y": 20,
+        "width": 60,
+        "height": 50
+      },
+      "back": {
+        "x": 20,
+        "y": 15,
+        "width": 60,
+        "height": 55
+      }
+    }
+  },
+  {
+    "id": "long-sleeve",
+    "basePrice": {
+      "THB": 890,
+      "USD": 28
+    },
+    "images": {
+      "black": {
+        "front": "/garments/long-sleeve/black/front.png",
+        "back": "/garments/long-sleeve/black/back.png"
+      },
+      "white": {
+        "front": "/garments/long-sleeve/white/front.png",
+        "back": "/garments/long-sleeve/white/back.png"
+      },
+      "red": {
+        "front": "/garments/long-sleeve/red/front.png",
+        "back": "/garments/long-sleeve/red/back.png"
+      },
+      "stone": {
+        "front": "/garments/long-sleeve/stone/front.png",
+        "back": "/garments/long-sleeve/stone/back.png"
+      },
+      "navy": {
+        "front": "/garments/long-sleeve/navy/front.png",
+        "back": "/garments/long-sleeve/navy/back.png"
+      },
+      "olive": {
+        "front": "/garments/long-sleeve/olive/front.png",
+        "back": "/garments/long-sleeve/olive/back.png"
+      }
+    },
+    "printArea": {
+      "front": {
+        "x": 20,
+        "y": 20,
+        "width": 60,
+        "height": 50
+      },
+      "back": {
+        "x": 20,
+        "y": 15,
+        "width": 60,
+        "height": 55
+      }
+    }
+  }
 ]

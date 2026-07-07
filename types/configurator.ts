@@ -48,7 +48,22 @@ export interface LibraryGraphic {
   fillRule?: "evenodd" | "nonzero";
 }
 
+/** Rectangle where designs may be placed, as a % of the garment image's width/height. */
+export interface PrintAreaRect {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
+export interface GarmentImageSet {
+  front: string;
+  back: string;
+}
+
 export interface Garment {
   id: GarmentStyle;
   basePrice: { THB: number; USD: number };
+  images: Record<GarmentColorId, GarmentImageSet>;
+  printArea: Record<ConfiguratorView, PrintAreaRect>;
 }

@@ -5,6 +5,8 @@ import {
   useConfiguratorStore,
   defaultTextLayer,
 } from "@/features/configurator/store";
+import { getGarment } from "@/lib/garments";
+import { getPrintArea, printAreaOffsetBounds } from "@/features/configurator/printArea";
 import { Slider } from "@/components/ui/Slider";
 import { buttonVariants } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
@@ -21,11 +23,16 @@ export function StepText() {
   const view = useConfiguratorStore((s) => s.view);
   const front = useConfiguratorStore((s) => s.front);
   const back = useConfiguratorStore((s) => s.back);
+  const garmentStyle = useConfiguratorStore((s) => s.garmentStyle);
   const setText = useConfiguratorStore((s) => s.setText);
   const updateText = useConfiguratorStore((s) => s.updateText);
 
   const side = view === "front" ? front : back;
   const text = side.text;
+  const garment = getGarment(garmentStyle);
+  const bounds = garment
+    ? printAreaOffsetBounds(getPrintArea(garment, view))
+    : { minX: -45, maxX: 45, minY: -45, maxY: 45 };
 
   if (!text) {
     return (
@@ -87,15 +94,15 @@ export function StepText() {
       <Slider
         label={t("graphicPositionX")}
         value={text.x}
-        min={-45}
-        max={45}
+        min={bounds.minX}
+        max={bounds.maxX}
         onChange={(v) => updateText(view, { x: v })}
       />
       <Slider
         label={t("graphicPositionY")}
         value={text.y}
-        min={-45}
-        max={45}
+        min={bounds.minY}
+        max={bounds.maxY}
         onChange={(v) => updateText(view, { y: v })}
       />
       <Slider

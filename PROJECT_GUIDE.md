@@ -66,6 +66,16 @@ If you add a new entry point into the configurator, make sure it goes
 through the `/configure/[slug]` route (not a client-side store mutation from
 elsewhere) so this logic stays the single place that decides reset-vs-keep.
 
+## Garment photos are generated placeholder assets
+
+The configurator's garment images (`public/garments/**`) and each garment's
+`images`/`printArea` fields in `data/garments.json` were produced by
+`scripts/generate-garment-photos.mjs` (plain Node, zero dependencies — PNG
+encoding uses only `node:zlib`). Re-run it after adding a color/style to
+`lib/theme.ts`/`data/garments.json`. Swapping in real product photography
+later is a data change (replace the files, update the URLs in
+`data/garments.json`), not a code change.
+
 ## Pricing is one function
 
 `features/configurator/pricing.ts`'s `calculatePrice` is the *only* place
