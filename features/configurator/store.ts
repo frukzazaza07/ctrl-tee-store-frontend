@@ -9,6 +9,9 @@ import type {
   TextLayer,
 } from "@/types/configurator";
 
+export const GRAPHIC_SCALE_MIN = 0.3;
+export const GRAPHIC_SCALE_MAX = 2.5;
+
 export function defaultConfig(garmentStyle: GarmentStyle): ConfiguratorConfig {
   return {
     garmentStyle,

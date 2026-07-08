@@ -2,7 +2,11 @@
 
 import { useRef } from "react";
 import type { PointerEvent as ReactPointerEvent } from "react";
-import { useConfiguratorStore } from "@/features/configurator/store";
+import {
+  useConfiguratorStore,
+  GRAPHIC_SCALE_MIN,
+  GRAPHIC_SCALE_MAX,
+} from "@/features/configurator/store";
 import { GarmentPhoto } from "@/components/configurator/GarmentPhoto";
 import { getGarment } from "@/lib/garments";
 import { getPrintArea, printAreaClipPath, clampToPrintArea } from "@/features/configurator/printArea";
@@ -24,15 +28,18 @@ function iconTintFor(color: GarmentColorId): string {
 
 type DragLayer = "graphic" | "text";
 
+function clamp(value: number, min: number, max: number): number {
+  return Math.min(max, Math.max(min, value));
+}
+
+type DragState =
+  | { mode: "move"; layer: DragLayer; startX: number; startY: number; origX: number; origY: number }
+  | { mode: "resize"; startX: number; startY: number; origScale: number; centerX: number; centerY: number };
+
 export function ConfiguratorPreview() {
   const frameRef = useRef<HTMLDivElement>(null);
-  const dragRef = useRef<{
-    layer: DragLayer;
-    startX: number;
-    startY: number;
-    origX: number;
-    origY: number;
-  } | null>(null);
+  const graphicRef = useRef<HTMLDivElement>(null);
+  const dragRef = useRef<DragState | null>(null);
 
   const {
     garmentStyle,
@@ -60,6 +67,7 @@ export function ConfiguratorPreview() {
     if (!target) return;
     e.currentTarget.setPointerCapture(e.pointerId);
     dragRef.current = {
+      mode: "move",
       layer,
       startX: e.clientX,
       startY: e.clientY,
@@ -68,10 +76,39 @@ export function ConfiguratorPreview() {
     };
   }
 
+  function handleResizeStart(e: ReactPointerEvent) {
+    e.stopPropagation();
+    if (!side.graphic || !graphicRef.current) return;
+    e.currentTarget.setPointerCapture(e.pointerId);
+    const box = graphicRef.current.getBoundingClientRect();
+    dragRef.current = {
+      mode: "resize",
+      startX: e.clientX,
+      startY: e.clientY,
+      origScale: side.graphic.scale,
+      centerX: box.left + box.width / 2,
+      centerY: box.top + box.height / 2,
+    };
+  }
+
   function handlePointerMove(e: ReactPointerEvent) {
     const drag = dragRef.current;
     const frame = frameRef.current;
     if (!drag || !frame) return;
+
+    if (drag.mode === "resize") {
+      const startDist = Math.hypot(drag.startX - drag.centerX, drag.startY - drag.centerY);
+      const currentDist = Math.hypot(e.clientX - drag.centerX, e.clientY - drag.centerY);
+      if (startDist < 1) return;
+      const nextScale = clamp(
+        drag.origScale * (currentDist / startDist),
+        GRAPHIC_SCALE_MIN,
+        GRAPHIC_SCALE_MAX,
+      );
+      updateGraphic(view, { scale: nextScale });
+      return;
+    }
+
     const rect = frame.getBoundingClientRect();
     const dxPct = ((e.clientX - drag.startX) / rect.width) * 100;
     const dyPct = ((e.clientY - drag.startY) / rect.height) * 100;
@@ -104,31 +141,57 @@ export function ConfiguratorPreview() {
       >
         {side.graphic && (
           <div
+            ref={graphicRef}
             aria-hidden="true"
             onPointerDown={(e) => handlePointerDown(e, "graphic")}
             className="absolute left-1/2 top-1/2 h-24 w-24 cursor-grab active:cursor-grabbing"
             style={{
               transform: `translate(-50%, -50%) translate(${side.graphic.x}%, ${side.graphic.y}%) scale(${side.graphic.scale}) rotate(${side.graphic.rotation}deg)`,
-              mixBlendMode: useMultiply ? "multiply" : undefined,
             }}
           >
-            {side.graphic.source === "upload" ? (
-              // eslint-disable-next-line @next/next/no-img-element -- user-uploaded data URL, not a static asset
-              <img
-                src={side.graphic.value}
-                alt=""
-                className="h-full w-full object-contain"
-                draggable={false}
-              />
-            ) : libraryGraphic ? (
-              <svg viewBox={libraryGraphic.viewBox} className="h-full w-full">
-                <path
-                  d={libraryGraphic.path}
-                  fillRule={libraryGraphic.fillRule}
-                  fill={iconTintFor(color)}
+            <div
+              className="h-full w-full"
+              style={{ mixBlendMode: useMultiply ? "multiply" : undefined }}
+            >
+              {side.graphic.source === "upload" ? (
+                // eslint-disable-next-line @next/next/no-img-element -- user-uploaded data URL, not a static asset
+                <img
+                  src={side.graphic.value}
+                  alt=""
+                  className="h-full w-full object-contain"
+                  draggable={false}
                 />
+              ) : libraryGraphic ? (
+                <svg viewBox={libraryGraphic.viewBox} className="h-full w-full">
+                  <path
+                    d={libraryGraphic.path}
+                    fillRule={libraryGraphic.fillRule}
+                    fill={iconTintFor(color)}
+                  />
+                </svg>
+              ) : null}
+            </div>
+
+            <div
+              aria-hidden="true"
+              onPointerDown={handleResizeStart}
+              className="absolute -bottom-2.5 -right-2.5 flex h-6 w-6 cursor-nwse-resize items-center justify-center rounded-full border border-white/70 bg-bg text-accent shadow-md shadow-black/50 transition-colors hover:bg-accent hover:text-accent-fg"
+              style={{ transform: `scale(${1 / side.graphic.scale})` }}
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2.5}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="h-3 w-3"
+              >
+                <line x1="19" y1="5" x2="5" y2="19" />
+                <polyline points="19 11 19 5 13 5" />
+                <polyline points="5 13 5 19 11 19" />
               </svg>
-            ) : null}
+            </div>
           </div>
         )}
 

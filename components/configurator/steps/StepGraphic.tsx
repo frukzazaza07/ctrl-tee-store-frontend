@@ -6,6 +6,8 @@ import { useTranslations } from "next-intl";
 import {
   useConfiguratorStore,
   defaultGraphicLayer,
+  GRAPHIC_SCALE_MIN,
+  GRAPHIC_SCALE_MAX,
 } from "@/features/configurator/store";
 import { getGarment } from "@/lib/garments";
 import { getPrintArea, printAreaOffsetBounds } from "@/features/configurator/printArea";
@@ -148,8 +150,8 @@ export function StepGraphic() {
           <Slider
             label={t("graphicScale")}
             value={graphic.scale}
-            min={0.3}
-            max={2.5}
+            min={GRAPHIC_SCALE_MIN}
+            max={GRAPHIC_SCALE_MAX}
             step={0.05}
             onChange={(v) => updateGraphic(view, { scale: v })}
             formatValue={(v) => `${Math.round(v * 100)}%`}
