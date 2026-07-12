@@ -1,5 +1,4 @@
-import type { ConfiguratorConfig, GarmentFit } from "@/types/configurator";
-import { getGarment } from "@/lib/garments";
+import type { ConfiguratorConfig, Garment, GarmentFit } from "@/types/configurator";
 
 type Money = { THB: number; USD: number };
 
@@ -16,8 +15,7 @@ function add(a: Money, b: Money): Money {
   return { THB: a.THB + b.THB, USD: a.USD + b.USD };
 }
 
-export function calculatePrice(config: ConfiguratorConfig): Money {
-  const garment = getGarment(config.garmentStyle);
+export function calculatePrice(config: ConfiguratorConfig, garment: Garment | undefined): Money {
   let total: Money = garment ? { ...garment.basePrice } : { THB: 0, USD: 0 };
 
   total = add(total, FIT_DELTA[config.fit]);

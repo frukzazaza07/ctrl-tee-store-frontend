@@ -1,4 +1,3 @@
-import { getGarment } from "@/lib/garments";
 import { getLibraryGraphic } from "@/lib/graphics-library";
 import { getPrintArea } from "@/features/configurator/printArea";
 import type {
@@ -107,12 +106,12 @@ function drawTextLayer(
   ctx.restore();
 }
 
-/** Flattens garment photo + design + text for one view into a single PNG data URL, or null if that side is empty. */
-export async function flattenViewToPng(
+/** Flattens garment photo + design + text for one view onto a canvas, or null if that side is empty. */
+async function flattenViewToCanvas(
   config: ConfiguratorConfig,
   view: ConfiguratorView,
   garment: Garment,
-): Promise<string | null> {
+): Promise<HTMLCanvasElement | null> {
   const side = view === "front" ? config.front : config.back;
   if (!side.graphic && !side.text?.content) return null;
 
@@ -140,7 +139,17 @@ export async function flattenViewToPng(
   if (side.text?.content) drawTextLayer(ctx, side.text, canvas.width, canvas.height);
   ctx.restore();
 
-  return canvas.toDataURL("image/png");
+  return canvas;
+}
+
+/** Flattens garment photo + design + text for one view into a single, print-ready PNG data URL, or null if that side is empty. */
+export async function flattenViewToPng(
+  config: ConfiguratorConfig,
+  view: ConfiguratorView,
+  garment: Garment,
+): Promise<string | null> {
+  const canvas = await flattenViewToCanvas(config, view, garment);
+  return canvas ? canvas.toDataURL("image/png") : null;
 }
 
 export interface CartExport {
@@ -148,19 +157,34 @@ export interface CartExport {
   printFiles: { front?: string; back?: string };
 }
 
-/** Flattens whichever views have content; used to build the cart-item thumbnail + print files on Add to Cart. */
-export async function buildCartExport(config: ConfiguratorConfig): Promise<CartExport> {
-  const garment = getGarment(config.garmentStyle);
+/**
+ * Flattens whichever views have content; used to build the cart-item
+ * thumbnail + print files on Add to Cart. Print files stay lossless PNG
+ * (print-ready); the thumbnail is re-encoded as JPEG from the same canvas —
+ * photographic content (garment photo + design) compresses far better as
+ * JPEG, and a UI thumbnail doesn't need print-file fidelity. Without this,
+ * a single flattened PNG can run into several MB and blow past the Server
+ * Action body-size limit once it's part of an order payload.
+ */
+export async function buildCartExport(
+  config: ConfiguratorConfig,
+  garment: Garment | undefined,
+): Promise<CartExport> {
   if (!garment) return { thumbnail: "", printFiles: {} };
 
-  const [front, back] = await Promise.all([
-    flattenViewToPng(config, "front", garment),
-    flattenViewToPng(config, "back", garment),
+  const [frontCanvas, backCanvas] = await Promise.all([
+    flattenViewToCanvas(config, "front", garment),
+    flattenViewToCanvas(config, "back", garment),
   ]);
 
   const printFiles: { front?: string; back?: string } = {};
-  if (front) printFiles.front = front;
-  if (back) printFiles.back = back;
+  if (frontCanvas) printFiles.front = frontCanvas.toDataURL("image/png");
+  if (backCanvas) printFiles.back = backCanvas.toDataURL("image/png");
 
-  return { thumbnail: front ?? back ?? garment.images[config.color].front, printFiles };
+  const primaryCanvas = frontCanvas ?? backCanvas;
+  const thumbnail = primaryCanvas
+    ? primaryCanvas.toDataURL("image/jpeg", 0.85)
+    : garment.images[config.color].front;
+
+  return { thumbnail, printFiles };
 }

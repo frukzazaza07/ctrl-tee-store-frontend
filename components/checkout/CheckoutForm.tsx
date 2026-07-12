@@ -6,6 +6,8 @@ import type { Locale } from "@/i18n/routing";
 import { useRouter } from "@/i18n/navigation";
 import { useCartStore } from "@/features/cart/store";
 import { cartSubtotal } from "@/features/cart/totals";
+import { createOrder } from "@/features/orders/actions";
+import { toOrderItemSnapshot } from "@/features/orders/snapshot";
 import { formatPrice } from "@/lib/format";
 import { Input } from "@/components/ui/Input";
 import { buttonVariants } from "@/components/ui/Button";
@@ -55,6 +57,7 @@ export function CheckoutForm() {
 
   const [fields, setFields] = useState<Fields>(initialFields);
   const [errors, setErrors] = useState<Partial<Record<FieldKey, string>>>({});
+  const [submitting, setSubmitting] = useState(false);
 
   function setField(key: FieldKey, value: string) {
     setFields((prev) => ({ ...prev, [key]: value }));
@@ -83,14 +86,28 @@ export function CheckoutForm() {
     return Object.keys(next).length === 0;
   }
 
-  function handleSubmit(e: FormEvent) {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     if (!validate()) return;
 
-    const orderNumber = `CT-${Date.now().toString(36).toUpperCase()}`;
-    const email = fields.email;
-    clear();
-    router.push(`/checkout/success?order=${orderNumber}&email=${encodeURIComponent(email)}`);
+    setSubmitting(true);
+    try {
+      const { orderNumber } = await createOrder({
+        locale,
+        fullName: fields.fullName,
+        email: fields.email,
+        address: fields.address,
+        city: fields.city,
+        postalCode: fields.postalCode,
+        country: fields.country,
+        subtotal,
+        items: items.map(toOrderItemSnapshot),
+      });
+      clear();
+      router.push(`/checkout/success?order=${orderNumber}&email=${encodeURIComponent(fields.email)}`);
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   if (items.length === 0) {
@@ -206,8 +223,12 @@ export function CheckoutForm() {
           <span className="text-fg-muted">{tCart("subtotal")}</span>
           <span className="text-xl font-semibold">{formatPrice(subtotal, locale)}</span>
         </div>
-        <button type="submit" className={buttonVariants({ size: "lg", className: "w-full" })}>
-          {t("placeOrder")}
+        <button
+          type="submit"
+          disabled={submitting}
+          className={buttonVariants({ size: "lg", className: "w-full disabled:opacity-70" })}
+        >
+          {submitting ? t("placingOrder") : t("placeOrder")}
         </button>
       </div>
     </form>

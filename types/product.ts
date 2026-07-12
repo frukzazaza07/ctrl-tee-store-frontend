@@ -13,4 +13,6 @@ export interface Product {
   featured: boolean;
   configurable: boolean;
   garmentStyle?: GarmentStyle;
+  name: { en: string; th: string };
+  description: { en: string; th: string };
 }

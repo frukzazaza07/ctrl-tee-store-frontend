@@ -3,6 +3,7 @@ import type { Locale } from "@/i18n/routing";
 import { Hero } from "@/components/home/Hero";
 import { CategoryTiles } from "@/components/home/CategoryTiles";
 import { FeaturedProducts } from "@/components/home/FeaturedProducts";
+import { CollectionSections } from "@/components/home/CollectionSections";
 import { ConfiguratorBanner } from "@/components/home/ConfiguratorBanner";
 import { BrandStory } from "@/components/home/BrandStory";
 
@@ -19,6 +20,7 @@ export default async function HomePage({
       <Hero />
       <CategoryTiles />
       <FeaturedProducts locale={locale} />
+      <CollectionSections locale={locale} />
       <ConfiguratorBanner />
       <BrandStory />
     </>

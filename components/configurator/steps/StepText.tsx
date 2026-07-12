@@ -5,7 +5,7 @@ import {
   useConfiguratorStore,
   defaultTextLayer,
 } from "@/features/configurator/store";
-import { getGarment } from "@/lib/garments";
+import { useCatalog } from "@/features/catalog/useCatalog";
 import { getPrintArea, printAreaOffsetBounds } from "@/features/configurator/printArea";
 import { Slider } from "@/components/ui/Slider";
 import { buttonVariants } from "@/components/ui/Button";
@@ -29,7 +29,8 @@ export function StepText() {
 
   const side = view === "front" ? front : back;
   const text = side.text;
-  const garment = getGarment(garmentStyle);
+  const { garments } = useCatalog();
+  const garment = garments.find((g) => g.id === garmentStyle);
   const bounds = garment
     ? printAreaOffsetBounds(getPrintArea(garment, view))
     : { minX: -45, maxX: 45, minY: -45, maxY: 45 };

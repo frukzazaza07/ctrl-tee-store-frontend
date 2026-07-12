@@ -8,6 +8,9 @@ import { routing } from "@/i18n/routing";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { CartDrawer } from "@/components/cart/CartDrawer";
+import { CatalogProvider } from "@/features/catalog/CatalogProvider";
+import { getAllProducts } from "@/lib/db/products";
+import { getAllGarments } from "@/lib/db/garments";
 import "../globals.css";
 
 const bodyFont = IBM_Plex_Sans_Thai({
@@ -19,6 +22,12 @@ const bodyFont = IBM_Plex_Sans_Thai({
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
+
+// The catalog (products/garments) now comes from Postgres via this layout's
+// fetch, not a static import — force every page under it to render per
+// request so DB changes show up immediately instead of only after a
+// redeploy (static prerendering would otherwise freeze the catalog at build time).
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
@@ -45,14 +54,18 @@ export default async function LocaleLayout({
   }
   setRequestLocale(locale);
 
+  const [products, garments] = await Promise.all([getAllProducts(), getAllGarments()]);
+
   return (
     <html lang={locale} className={`${bodyFont.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col font-sans">
         <NextIntlClientProvider>
-          <Header />
-          <main className="flex-1">{children}</main>
-          <Footer />
-          <CartDrawer />
+          <CatalogProvider products={products} garments={garments}>
+            <Header />
+            <main className="flex-1">{children}</main>
+            <Footer />
+            <CartDrawer />
+          </CatalogProvider>
         </NextIntlClientProvider>
       </body>
     </html>

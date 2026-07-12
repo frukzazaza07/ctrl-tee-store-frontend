@@ -9,7 +9,7 @@ import {
   GRAPHIC_SCALE_MIN,
   GRAPHIC_SCALE_MAX,
 } from "@/features/configurator/store";
-import { getGarment } from "@/lib/garments";
+import { useCatalog } from "@/features/catalog/useCatalog";
 import { getPrintArea, printAreaOffsetBounds } from "@/features/configurator/printArea";
 import { validateDesignFile, readDesignFileAsDataUrl } from "@/features/configurator/upload";
 import { graphicsLibrary } from "@/lib/graphics-library";
@@ -33,7 +33,8 @@ export function StepGraphic() {
   );
   const [error, setError] = useState<"type" | "size" | null>(null);
 
-  const garment = getGarment(garmentStyle);
+  const { garments } = useCatalog();
+  const garment = garments.find((g) => g.id === garmentStyle);
   const bounds = garment
     ? printAreaOffsetBounds(getPrintArea(garment, view))
     : { minX: -45, maxX: 45, minY: -45, maxY: 45 };

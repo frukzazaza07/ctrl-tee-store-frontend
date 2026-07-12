@@ -1,83 +1,107 @@
 # CTRL TEE
 
 A Porsche-inspired e-commerce site for a clothing brand, built around a
-"build your own shirt" configurator. Next.js (App Router) + TypeScript +
-Tailwind CSS + Zustand, fully bilingual (Thai default / English), with mock
-product data and a mock checkout — no backend required to run it.
+"build your own shirt" configurator with real garment photos, a Postgres
+catalog, and an admin panel for managing products/collections. Next.js (App
+Router) + TypeScript + Tailwind CSS + Zustand, fully bilingual (Thai default
+/ English), with a mock (non-charging) checkout.
 
 ## Stack
 
 - **Next.js 16** (App Router, Turbopack) + React 19 + TypeScript (strict)
+- **Postgres** via **Drizzle ORM** — products, garments, orders, collections,
+  admin users all live in the DB (`lib/db/`), not static files
 - **Tailwind CSS v4** (CSS-variable theme, see `app/globals.css`)
-- **next-intl** for i18n routing (`/th`, `/en`)
-- **Zustand** for cart + configurator state (cart persists to `localStorage`)
+- **next-intl** for storefront i18n routing (`/th`, `/en`) — the admin panel
+  at `/admin` is unlocalized
+- **Zustand** for cart + in-progress configurator state (cart persists to
+  `localStorage`; the configurator build does not — see `PROJECT_GUIDE.md`)
 - **Framer Motion** for scroll-reveal and the cart drawer transition
-- Mock data in `data/*.json` — no database, no external image hosting
-  (product/mockup art is generated as inline SVG, seeded by product id)
+- Hand-rolled admin auth: `bcryptjs` (password hashing) + `jose` (signed JWT
+  session cookies, Edge-runtime-safe for `proxy.ts` middleware) — no NextAuth
 
 ## Running it
 
 ```bash
 pnpm install
-pnpm dev       # http://localhost:3000 (redirects to /th)
+docker compose up -d                 # local Postgres, no account needed
+cp .env.example .env.local           # fill in AUTH_SECRET / ADMIN_EMAIL / ADMIN_PASSWORD
+pnpm db:migrate && pnpm db:seed       # schema + seed products/garments/collections
+pnpm db:create-admin                 # creates the one admin user (no public sign-up)
+pnpm dev                             # http://localhost:3000 (redirects to /th)
 ```
+
+Admin panel: `http://localhost:3000/admin/login`, sign in with the
+`ADMIN_EMAIL`/`ADMIN_PASSWORD` you set above.
 
 Other scripts:
 
 ```bash
-pnpm build     # production build
-pnpm start     # serve the production build
-pnpm lint      # eslint
-pnpm exec tsc --noEmit   # typecheck
+pnpm build              # production build
+pnpm start              # serve the production build
+pnpm lint                # eslint
+pnpm exec tsc --noEmit  # typecheck
+pnpm db:generate        # generate a new migration after editing lib/db/schema.ts
 ```
 
-Requires Node 18.18+ and pnpm. `pnpm install` may prompt to approve native
-build scripts (`sharp`, `@swc/core`, `@parcel/watcher`, `unrs-resolver`) —
-these are standard Next.js/image-optimization/toolchain dependencies.
+Requires Node 18.18+, pnpm, and Docker (for local Postgres). `pnpm install`
+may prompt to approve native build scripts (`sharp`, `@swc/core`,
+`@parcel/watcher`, `unrs-resolver`, `esbuild`) — these are standard Next.js/
+image-optimization/toolchain dependencies.
+
+Deploying (e.g. Vercel): set `DATABASE_URL` (your production Postgres),
+`AUTH_SECRET` (generate a fresh one — see `.env.example`), then run
+`pnpm db:migrate`, `pnpm db:seed`, and `pnpm db:create-admin` once against
+that `DATABASE_URL` before first use.
 
 ## Project structure
 
 ```
-app/[locale]/          Routes (App Router), one folder per page
+app/[locale]/          Storefront routes (App Router), localized
   configure/[slug]/    Shirt configurator (slug = crew | vneck | long-sleeve)
   product/[slug]/      Product detail
   shop/                 Catalog with filters
   cart/, checkout/      Cart page, checkout + order success
+app/admin/              Admin panel routes — unlocalized, gated by proxy.ts
+  login/                Sign-in form
+  (dashboard)/          Products + collections CRUD, behind the nav layout
 components/
   ui/                   Generic primitives: Button, Card, Input, Slider, ...
+  admin/                 Admin-only forms (ProductForm, CollectionForm, LoginForm)
   layout/               Header, Footer, LocaleSwitcher, MobileNav, cart trigger
-  home/                 Hero, CategoryTiles, FeaturedProducts, ...
+  home/                 Hero, CategoryTiles, FeaturedProducts, CollectionSections, ...
   shop/, product/        Catalog grid/filters, gallery, size/color selectors
   configurator/          Live preview + the 6-step wizard (components/configurator/steps/)
   cart/, checkout/        Drawer, cart row, checkout form, order success
 features/
   cart/                 Zustand cart store + total/price helpers
-  configurator/          Zustand configurator store, pricing, share-link codec
-lib/                     Mock-data accessors, formatting, theme tokens, labels
-data/                    products.json, garments.json, graphics-library.json
-messages/                en.json, th.json — all UI copy lives here
+  configurator/          Zustand configurator store, pricing, share-link codec, export/print-area
+  catalog/                CatalogProvider/useCatalog — how Client Components read DB data
+  auth/, orders/          Server Actions: login/logout, order creation
+  admin/products/, admin/collections/   Server Actions: create/update/delete
+lib/
+  db/                   Drizzle schema + typed accessors (products, garments, orders, collections, users)
+  auth/                  Password hashing (bcryptjs), session JWTs (jose)
+data/                    products.json, garments.json, graphics-library.json — seed data, not runtime
+scripts/                 seed-db.mjs, create-admin.mjs, generate-garment-photos.mjs
+messages/                en.json, th.json — storefront UI copy (product copy now lives in the DB)
 types/                    Shared TypeScript types
 ```
 
-## Adding a product
+## Managing products & collections
 
-Products are mock data — no CMS. To add one:
+There's no more "edit a JSON file" step — sign in at `/admin/login` and use
+the Products / Collections pages to create, edit, and delete. A product's
+name/description are entered per-language (English + Thai) directly in the
+admin form; there's no separate translation-file step anymore. See
+`PROJECT_GUIDE.md`'s "Product copy lives in the DB" and "Admin panel" sections
+for the reasoning and how the pieces fit together.
 
-1. Add an entry to `data/products.json` (id, slug, category, price in both
-   THB and USD, colors, sizes, `featured`, `configurable`, and — only for
-   configurable t-shirts — `garmentStyle`: `"crew" | "vneck" | "long-sleeve"`).
-2. Add a matching `products.<id>.name` / `products.<id>.description` entry
-   to **both** `messages/en.json` and `messages/th.json` (product copy is
-   translation-driven, not stored in the JSON data file).
-
-Product imagery is generated automatically (a seeded gradient + silhouette
-via `components/ui/PlaceholderArt.tsx`) — no image files to manage. Swap in
-real photography by replacing that component's usage with an `<Image>`.
-
-To add a new configurable base garment (a new shirt style), add it to
-`data/garments.json`, add a silhouette to
-`components/configurator/GarmentMockup.tsx`, and add the label keys to
-`lib/labels.ts` + both message files.
+To add a new *configurable base garment* (a new shirt style, distinct from a
+product) — that's still a data + code change, not an admin-UI action: add it
+to `data/garments.json`, regenerate/add its photos
+(`scripts/generate-garment-photos.mjs`), run `pnpm db:seed`, and add the
+label keys to `lib/labels.ts` + both message files.
 
 ## Adding / editing translations
 

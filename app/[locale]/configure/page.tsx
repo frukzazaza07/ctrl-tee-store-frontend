@@ -2,7 +2,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Section } from "@/components/ui/Section";
 import { Link } from "@/i18n/navigation";
 import { PlaceholderArt } from "@/components/ui/PlaceholderArt";
-import { garments } from "@/lib/garments";
+import { getAllGarments } from "@/lib/db/garments";
 import { STYLE_LABEL_KEY } from "@/lib/labels";
 
 export default async function ConfigureIndexPage({
@@ -13,6 +13,7 @@ export default async function ConfigureIndexPage({
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "configurator" });
+  const garments = await getAllGarments();
 
   return (
     <Section>

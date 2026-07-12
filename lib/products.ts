@@ -1,8 +1,5 @@
-import productsData from "@/data/products.json";
 import type { GarmentColorId } from "@/lib/theme";
 import type { Product, ProductCategory } from "@/types/product";
-
-export const products = productsData as Product[];
 
 export interface ProductFilters {
   category: ProductCategory | "all";
@@ -35,16 +32,4 @@ export function getPriceBounds(
 ): { min: number; max: number } {
   const values = list.map(priceOf);
   return { min: Math.min(...values), max: Math.max(...values) };
-}
-
-export function getFeaturedProducts(): Product[] {
-  return products.filter((p) => p.featured);
-}
-
-export function getProductBySlug(slug: string): Product | undefined {
-  return products.find((p) => p.slug === slug);
-}
-
-export function getProductById(id: string): Product | undefined {
-  return products.find((p) => p.id === id);
 }

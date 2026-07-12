@@ -1,4 +1,6 @@
-import { getGarment } from "@/lib/garments";
+"use client";
+
+import { useCatalog } from "@/features/catalog/useCatalog";
 import type { ConfiguratorView } from "@/types/configurator";
 import type { GarmentStyle } from "@/types/product";
 import type { GarmentColorId } from "@/lib/theme";
@@ -10,7 +12,8 @@ interface GarmentPhotoProps {
 }
 
 export function GarmentPhoto({ style, view, color }: GarmentPhotoProps) {
-  const garment = getGarment(style);
+  const { garments } = useCatalog();
+  const garment = garments.find((g) => g.id === style);
   const src = garment?.images[color][view];
   if (!src) return null;
 

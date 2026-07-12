@@ -21,7 +21,6 @@ export function ProductCard({
   locale: Locale;
 }) {
   const t = useTranslations("common");
-  const tProduct = useTranslations(`products.${product.id}`);
 
   return (
     <Card className="group flex flex-col overflow-hidden">
@@ -38,8 +37,8 @@ export function ProductCard({
 
       <div className="flex flex-1 flex-col gap-3 p-5">
         <div>
-          <h3 className="font-medium">{tProduct("name")}</h3>
-          <p className="mt-1 text-sm text-fg-muted">{tProduct("description")}</p>
+          <h3 className="font-medium">{product.name[locale]}</h3>
+          <p className="mt-1 text-sm text-fg-muted">{product.description[locale]}</p>
         </div>
 
         <PriceTag price={product.price} locale={locale} from className="mt-auto text-sm" />

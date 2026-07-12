@@ -9,6 +9,7 @@ import {
 } from "@/features/configurator/store";
 import { calculatePrice } from "@/features/configurator/pricing";
 import { buildCartExport } from "@/features/configurator/export";
+import { useCatalog } from "@/features/catalog/useCatalog";
 import { formatPrice } from "@/lib/format";
 import { garmentColors } from "@/lib/theme";
 import { COLOR_LABEL_KEY, STYLE_LABEL_KEY, FIT_LABEL_KEY } from "@/lib/labels";
@@ -31,7 +32,9 @@ export function StepSummary() {
   const [added, setAdded] = useState(false);
   const [adding, setAdding] = useState(false);
 
-  const price = calculatePrice(config);
+  const { garments } = useCatalog();
+  const garment = garments.find((g) => g.id === config.garmentStyle);
+  const price = calculatePrice(config, garment);
   const colorHex = garmentColors.find((c) => c.id === config.color)?.hex;
 
   const graphicSides = [
@@ -46,7 +49,7 @@ export function StepSummary() {
 
   async function handleAddToCart() {
     setAdding(true);
-    const { thumbnail, printFiles } = await buildCartExport(config);
+    const { thumbnail, printFiles } = await buildCartExport(config, garment);
     addItem({
       id: crypto.randomUUID(),
       kind: "configurator",

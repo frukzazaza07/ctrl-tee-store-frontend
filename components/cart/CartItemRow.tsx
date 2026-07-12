@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import type { Locale } from "@/i18n/routing";
-import { getProductById } from "@/lib/products";
+import { useCatalog } from "@/features/catalog/useCatalog";
 import { garmentColors } from "@/lib/theme";
 import { STYLE_LABEL_KEY } from "@/lib/labels";
 import { formatPrice } from "@/lib/format";
@@ -16,8 +16,9 @@ const CATEGORY_SHAPE: Record<string, PlaceholderShape> = {
 };
 
 function ItemThumbnail({ item }: { item: CartItem }) {
+  const { products } = useCatalog();
   if (item.kind === "product") {
-    const product = getProductById(item.productId);
+    const product = products.find((p) => p.id === item.productId);
     return (
       <PlaceholderArt
         seed={item.productId}
@@ -32,14 +33,14 @@ function ItemThumbnail({ item }: { item: CartItem }) {
   return <PlaceholderArt seed={item.id} shape="tshirt" />;
 }
 
-function ItemName({ item }: { item: CartItem }) {
+function ItemName({ item, locale }: { item: CartItem; locale: Locale }) {
   const t = useTranslations("cart");
-  const tProducts = useTranslations("products");
   const tConfigurator = useTranslations("configurator");
+  const { products } = useCatalog();
 
   if (item.kind === "product") {
-    const product = getProductById(item.productId);
-    return <>{product ? tProducts(`${product.id}.name`) : item.productId}</>;
+    const product = products.find((p) => p.id === item.productId);
+    return <>{product ? product.name[locale] : item.productId}</>;
   }
 
   return (
@@ -67,7 +68,7 @@ export function CartItemRow({ item, locale, onRemove, onQuantityChange }: CartIt
       <div className="flex flex-1 flex-col justify-between">
         <div>
           <p className="font-medium">
-            <ItemName item={item} />
+            <ItemName item={item} locale={locale} />
           </p>
           <p className="mt-1 flex items-center gap-2 text-sm text-fg-muted">
             <span

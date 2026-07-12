@@ -5,7 +5,8 @@ import { useLocale } from "next-intl";
 import type { Locale } from "@/i18n/routing";
 import { FilterSidebar } from "@/components/shop/FilterSidebar";
 import { ProductGrid } from "@/components/shop/ProductGrid";
-import { products, filterProducts, getPriceBounds } from "@/lib/products";
+import { filterProducts, getPriceBounds } from "@/lib/products";
+import { useCatalog } from "@/features/catalog/useCatalog";
 import type { Product, ProductCategory } from "@/types/product";
 import type { GarmentColorId } from "@/lib/theme";
 
@@ -19,8 +20,9 @@ export function ShopClient({
   initialCategory: ProductCategory | "all";
 }) {
   const locale = useLocale() as Locale;
+  const { products } = useCatalog();
   const priceOf = useMemo(() => priceOfFor(locale), [locale]);
-  const priceBounds = useMemo(() => getPriceBounds(products, priceOf), [priceOf]);
+  const priceBounds = useMemo(() => getPriceBounds(products, priceOf), [products, priceOf]);
 
   const [category, setCategory] = useState(initialCategory);
   const [colors, setColors] = useState<GarmentColorId[]>([]);
@@ -33,11 +35,11 @@ export function ShopClient({
 
   const availableColors = useMemo(
     () => Array.from(new Set(products.flatMap((p) => p.colors))),
-    [],
+    [products],
   );
   const availableSizes = useMemo(
     () => Array.from(new Set(products.flatMap((p) => p.sizes))),
-    [],
+    [products],
   );
 
   const filtered = filterProducts(products, { category, colors, sizes, maxPrice }, priceOf);

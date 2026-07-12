@@ -1,13 +1,13 @@
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import type { Locale } from "@/i18n/routing";
 import { Section } from "@/components/ui/Section";
 import { Reveal } from "@/components/ui/Reveal";
 import { ProductCard } from "@/components/shop/ProductCard";
-import { getFeaturedProducts } from "@/lib/products";
+import { getFeaturedProducts } from "@/lib/db/products";
 
-export function FeaturedProducts({ locale }: { locale: Locale }) {
-  const t = useTranslations("home");
-  const featured = getFeaturedProducts();
+export async function FeaturedProducts({ locale }: { locale: Locale }) {
+  const t = await getTranslations({ locale, namespace: "home" });
+  const featured = await getFeaturedProducts();
 
   return (
     <Section>

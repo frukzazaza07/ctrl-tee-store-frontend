@@ -8,7 +8,7 @@ import {
   GRAPHIC_SCALE_MAX,
 } from "@/features/configurator/store";
 import { GarmentPhoto } from "@/components/configurator/GarmentPhoto";
-import { getGarment } from "@/lib/garments";
+import { useCatalog } from "@/features/catalog/useCatalog";
 import { getPrintArea, printAreaClipPath, clampToPrintArea } from "@/features/configurator/printArea";
 import { getLibraryGraphic } from "@/lib/graphics-library";
 import type { GarmentColorId } from "@/lib/theme";
@@ -52,7 +52,8 @@ export function ConfiguratorPreview() {
   } = useConfiguratorStore();
 
   const side = view === "front" ? front : back;
-  const garment = getGarment(garmentStyle);
+  const { garments } = useCatalog();
+  const garment = garments.find((g) => g.id === garmentStyle);
   const printArea = garment
     ? getPrintArea(garment, view)
     : { x: 0, y: 0, width: 100, height: 100 };
